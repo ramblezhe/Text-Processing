@@ -1,6 +1,25 @@
 import numpy as np  # 有时用来判断列表维度，若无该库，请把 assert np.array(list).ndim == num 注释！
 
 
+# ==============================================================================
+# 几个调用实例：
+# result = read_xls_file('./info.xlsx', name_list=['姓名', '班级'])  # 返回字典型、表单切片的数据
+# result = read_xls_file('./info.xls', sheet_var='StudentInfo', name_list=['姓名', '班级'],
+#          category='col', begin=0, export_type='list')  # 返回列表型、StudentInfo表单、指定列的数据（还包括了列名）
+# 
+# write_xls_file([[[1,2,3], [1,2]], [[4]]], './test.xlsx', sheet_list=['tmp1', 'tmp2'])
+# write_xls_file([[[1,2,3], [1,2], [4]]], './test.xls', category='col')
+#
+# result = read_csv_file('./info.csv', name_list=['姓名', '班级'])  # 返回字典型、表单切片的数据
+#
+# write_csv_file([['1','2','3'], [1,2], [4]], './test.csv', mode='w')
+# write_csv_file([['1','2','3'], [1,2], [4]], './test.csv', mode='a', category='col')
+#
+# result = read_txt_file('./test.txt', code_type='utf-16')
+# result = read_txt_file('./test.txt', n_num=10)  # 读取以'\n'为分割方式的前10行文本
+#
+# write_txt_file(['I love nlp', 'hello world'], './test.txt')
+# ==============================================================================
 def read_xls_file(file_path, sheet_var=0, name_list=[], category='', begin=1, export_type='dict'):
     """
     read only one .xls or .xlsx file and obtain the specific content
@@ -89,7 +108,7 @@ def write_xls_file(info_list, file_path, sheet_list=['Sheet1'],  category='row')
     """
     write .xls or .xlsx file with organized input
 
-    :param info_list: 3d list, consists of all information
+    :param info_list: 3d list, consists of all information (sheet, table, content)
     :param file_path: string, the path of this file
     :param sheet_list: 1d list, consists of names of these sheets
     :param category: string, insert by rows or columns
@@ -344,6 +363,7 @@ def write_txt_file(text_list, file_path, mode='w', code_type='utf-8'):
     with open(file_path, mode, encoding=code_type) as wr:
         wr.write('\n'.join(text_list) + '\n')
                             
+
 
 
 
