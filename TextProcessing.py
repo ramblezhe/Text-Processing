@@ -13,24 +13,29 @@ def split_sentence(cont):
     assert isinstance(cont, str)
 
     re_sen = re.compile('([。！？\.!?]+)')  # 用来分割句子的符号
+    re_num = re.compile('[0-9０１２３４５６７８９]+')
     sentence_list = []
-    tmp_list = re_sen.split(cont)
+    tmp_list = re_sen.split(cont)  # 注意，即便分句的标点在首尾，使用 re.split 后列表中的首尾元素会是空字符
     tmp_str = ''
     length = len(tmp_list)
 
     for i in range(length):
-        if tmp_list[i]:  # assert
+        if tmp_list[i]:
+            tmp_str += tmp_list[i]
             if not re_sen.search(tmp_list[i]):
-                tmp_str = tmp_list[i]
                 if i == length-1:  # the last element
                     sentence_list.append(tmp_str)  # 最后一部分没有断句符号也要当作一个句子
 
             else:
-                tmp_str += tmp_list[i]
+                if tmp_list[i] == '.':  # 该情况要特别分析
+                    if tmp_list[i-1] and tmp_list[i+1]:  # 如前，tmp_list 的首尾元素一定不是断句符号
+                        if re_num.search(tmp_list[i-1][-1]) and re_num.search(tmp_list[i+1][0]):
+                            continue
+
                 sentence_list.append(tmp_str)
                 tmp_str = ''
 
-    return sentence_list
+    return sentence_list	
 
 
 def sentence_to_article(input_list):
@@ -53,7 +58,7 @@ def sentence_to_article(input_list):
         attribute = input_list[i][1]  # fixed temporarily
         if tmp_att != attribute:
             if tmp_list:
-                article_list.append('\n'.join(tmp_list))
+                article_list.append('\n'.join(tmp_list))  # 结算上面的
                 tmp_list = [sentence]
             else:  # tmp_list is empty only when i == 0
                 tmp_list.append(sentence)
